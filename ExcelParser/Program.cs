@@ -39,17 +39,17 @@ namespace ExcelParser
             public string name;
             public List<string> telephones;
             public string address;
-            public string email;
+            public List<string> emails;
             public string website;
             public string city;
             public List<string> tags;
             public Tuple(string _name, List<string> _telephones, string _address,
-                  string _email, string _website, string _city, List<string> _tags)
+                  List<string> _emails, string _website, string _city, List<string> _tags)
             {
                 name = _name;
                 telephones = _telephones;
                 address = _address;
-                email = _email;
+                emails = _emails;
                 website = _website;
                 city = _city;
                 tags = _tags;
@@ -125,6 +125,12 @@ namespace ExcelParser
                 }
                 string cAdress = (String)sheet.Cells[i, 3].Value;
                 string cEmail = (String)sheet.Cells[i, 4].Value;
+                List<string> lEmails = (cEmail.Split('|',',')).ToList();
+                for (int q = 0; q < lEmails.Count; q++)
+                {
+                    string str = Regex.Replace(lEmails[q], " ", "");
+                    lEmails[q] = str;
+                }
                 string cSite = (String)sheet.Cells[i, 5].Value;
                 string cCity = (String)sheet.Cells[i, 6].Value;
 
@@ -136,7 +142,7 @@ namespace ExcelParser
                     lTags.Add(currentRegion);
                 if (currentDirection.Length > 0)
                     lTags.Add(currentDirection);
-                Tuple newTuple = new Tuple(cName, lPhones, cAdress, cEmail, cSite, cCity, lTags);
+                Tuple newTuple = new Tuple(cName, lPhones, cAdress, lEmails, cSite, cCity, lTags);
                 result.Add(newTuple);
                 // break; // for single result
             }
